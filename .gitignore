@@ -2,3 +2,5 @@
 .gitattributes
 Ror2-Commando-DoubleTap/bin/
 Ror2-Commando-DoubleTap/obj/
+dist/*.dll
+dist/*.zip
