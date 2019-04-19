@@ -24,9 +24,19 @@ namespace TrueDoubleTap
         }
         float Ratio => RatioConfig(Config.Wrap("DoubleTap", "Ratio", "Ratio of time between shots to time between bursts", "0.3").Value);
 
+        public bool ChatOutputConfig(string configline)
+        {
+            if (bool.TryParse(configline, out bool chatOutput))
+            {
+                return chatOutput;
+            }
+            return true;
+        }
+        bool chatOutput => ChatOutputConfig(Config.Wrap("DoubleTap", "ChatOutput", "Whether to write mod output to chat", "true").Value);
+
         public void Awake()
         {
-            Chat.AddMessage(String.Format("Commando DoubleTap ratio set to {0}", Ratio));
+            if (chatOutput) Chat.AddMessage(String.Format("Commando DoubleTap ratio set to {0}", Ratio));
 
             On.EntityStates.Commando.CommandoWeapon.FirePistol2.OnEnter += (orig, self) =>
             {
