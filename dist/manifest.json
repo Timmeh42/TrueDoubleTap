@@ -2,7 +2,7 @@
     "name": "TrueDoubleTap",
     "version_number": "1.3.0",
     "website_url": "https://github.com/Timmeh42/TrueDoubleTap",
-    "description": "Makes the Commando's priamry fire more like a double-tap. Now you can also reduce the firing spread!",
+    "description": "Makes the Commando's primary fire more like a double-tap. Now you can also reduce the firing spread!",
     "dependencies": [
         "bbepis-BepInExPack-1.3.1"
     ]
