@@ -3,51 +3,52 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
-using BepInEx.Configuration;
 using RoR2;
 
 namespace TrueDoubleTap
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.2.0")]
+    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.2.1")]
     public class TrueDoubleTap : BaseUnityPlugin
     {
-        public float RatioConfig(string configline)
+        public float ParseFloat(string strInput, float defaultVal = 1.0f, float min = float.MinValue, float max = float.MaxValue)
         {
-            if (float.TryParse(configline, NumberStyles.Any, CultureInfo.InvariantCulture, out float ratioTemp))
+            if (float.TryParse(strInput, NumberStyles.Any, CultureInfo.InvariantCulture, out float parsedFloat))
             {
-                var ratioMin = 0.01f;
-                var ratioMax = 1f;
-                return (ratioTemp <= ratioMin) ? ratioMin : (ratioTemp >= ratioMax) ? ratioMax : ratioTemp;
-            }
-            return 1f;
-        }
-        float Ratio => RatioConfig(Config.Wrap("DoubleTap", "Ratio", "Ratio of time between shots to time between bursts", "0.3").Value);
+                if (parsedFloat <= min) parsedFloat = min;
+                if (parsedFloat >= max) parsedFloat = max;
 
-        public bool ChatOutputConfig(string configline)
-        {
-            if (bool.TryParse(configline, out bool chatOutput))
-            {
-                return chatOutput;
+                return parsedFloat;
             }
-            return true;
+            return defaultVal;
         }
-        bool chatOutput => ChatOutputConfig(Config.Wrap("DoubleTap", "ChatOutput", "Whether to write mod output to chat", "true").Value);
+
+        public bool ParseBool(string strInput, bool defaultVal = true)
+        {
+            if (bool.TryParse(strInput, out bool parsedBool))
+            {
+                return parsedBool;
+            }
+            return defaultVal;
+        }
+
+        float ratio => ParseFloat(Config.Wrap("DoubleTap", "Ratio", "Ratio of time between shots to time between bursts", "0.3").Value, 1f, 0.01f, 1f);
+        bool chatOutput => ParseBool(Config.Wrap("DoubleTap", "ChatOutput", "Whether to write mod output to chat", "true").Value);
 
         public void Awake()
         {
-            if (chatOutput) Chat.AddMessage(String.Format("Commando DoubleTap ratio set to {0}", Ratio));
+            if (chatOutput) Chat.AddMessage(String.Format("Commando DoubleTap ratio set to {0}", ratio));
 
             On.EntityStates.Commando.CommandoWeapon.FirePistol2.OnEnter += (orig, self) =>
             {
                 Assembly assembly = self.GetType().Assembly;
                 Type firePistol = assembly.GetTypes().First(t => t.IsClass && t.Namespace == "EntityStates.Commando.CommandoWeapon" && t.Name == "FirePistol2");
                 float current_duration = (float) firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).GetValue(null);
-                firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).SetValue(null, 2f * Ratio / (1f + Ratio) * current_duration);
+                firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).SetValue(null, 2f * ratio / (1f + ratio) * current_duration);
                 FieldInfo remainingShots = firePistol.GetField("remainingShots", BindingFlags.Public | BindingFlags.Instance);
                 if ((int) remainingShots.GetValue(self) % 2 != 0)
                 {
-                    firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).SetValue(null, 2f * 1f / (1f + Ratio) * current_duration);
+                    firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).SetValue(null, 2f * 1f / (1f + ratio) * current_duration);
                 }
                 orig(self);
                 firePistol.GetField("baseDuration", BindingFlags.Static | BindingFlags.Public).SetValue(null, current_duration);
