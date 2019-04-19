@@ -9,7 +9,7 @@ using RoR2;
 namespace TrueDoubleTap
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.1.0")]
+    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.2.0")]
     public class TrueDoubleTap : BaseUnityPlugin
     {
         public float RatioConfig(string configline)
