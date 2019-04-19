@@ -1,6 +1,6 @@
 {
     "name": "TrueDoubleTap",
-    "version_number": "1.2.1",
+    "version_number": "1.2.2",
     "website_url": "https://github.com/Timmeh42/TrueDoubleTap",
     "description": "Makes the Commando shoot a 2-shot burst with a pause afterwards. Overall fire rate is unchanged.",
     "dependencies": [

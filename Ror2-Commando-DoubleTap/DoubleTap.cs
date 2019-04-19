@@ -8,7 +8,7 @@ using RoR2;
 namespace TrueDoubleTap
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.2.1")]
+    [BepInPlugin("com.Timmeh42.TrueDoubleTap", "True DoubleTap", "1.2.2")]
     public class TrueDoubleTap : BaseUnityPlugin
     {
         public float ParseFloat(string strInput, float defaultVal = 1.0f, float min = float.MinValue, float max = float.MaxValue)
@@ -25,15 +25,12 @@ namespace TrueDoubleTap
 
         public bool ParseBool(string strInput, bool defaultVal = true)
         {
-            if (bool.TryParse(strInput, out bool parsedBool))
-            {
-                return parsedBool;
-            }
-            return defaultVal;
+            return bool.TryParse(strInput, out bool parsedBool) ? parsedBool : defaultVal;
         }
 
-        float ratio => ParseFloat(Config.Wrap("DoubleTap", "Ratio", "Ratio of time between shots to time between bursts", "0.3").Value, 1f, 0.01f, 1f);
-        bool chatOutput => ParseBool(Config.Wrap("DoubleTap", "ChatOutput", "Whether to write mod output to chat", "true").Value);
+
+        float ratio => ParseFloat(Config.Wrap("DoubleTap", "Ratio", "Ratio of time between shots to time between bursts (decimal number between 0.01 and 1)", "0.3").Value, 1f, 0.01f, 1f);
+        bool chatOutput => ParseBool(Config.Wrap("DoubleTap", "ChatOutput", "Whether to write mod output to chat (boolean 'true' or 'false')", "true").Value);
 
         public void Awake()
         {
