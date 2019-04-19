@@ -1,8 +1,8 @@
 {
     "name": "TrueDoubleTap",
-    "version_number": "1.2.2",
+    "version_number": "1.3.0",
     "website_url": "https://github.com/Timmeh42/TrueDoubleTap",
-    "description": "Makes the Commando shoot a 2-shot burst with a pause afterwards. Overall fire rate is unchanged.",
+    "description": "Makes the Commando's priamry fire more like a double-tap. Now you can also reduce the firing spread!",
     "dependencies": [
         "bbepis-BepInExPack-1.3.1"
     ]
